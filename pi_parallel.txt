@@ -1,0 +1,28 @@
+#include <iostream>
+#include <cmath>
+#include <omp.h>
+
+int main(int argc, char** argv)
+{
+    const unsigned long Steps = 10000000;
+    double pi = 0;
+    double integral = 0.0;
+    double step;
+    double x;
+
+
+    step = 1. / static_cast<double>(Steps);
+
+#pragma omp parallel for private (x), reduction (+:integral)
+    for (int i = 0; i < Steps; i++)
+    {
+        x = (i + .5) * step;
+        integral = integral + 4.0 / (x * x + 1. );
+    }
+    pi =integral * step;
+
+    std::cout << "My PI is " << pi;
+
+   
+    return 0;
+}
